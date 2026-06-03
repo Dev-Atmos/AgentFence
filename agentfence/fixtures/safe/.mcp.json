@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "project-docs": {
+      "command": "node",
+      "args": ["docs-server.js"],
+      "env": {
+        "DOCS_PATH": "./docs"
+      },
+      "permissions": ["filesystem:read"],
+      "allowedDirectories": ["./docs"]
+    }
+  }
+}

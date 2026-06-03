@@ -1,0 +1,26 @@
+{
+  "name": "agentfence",
+  "version": "0.1.0",
+  "description": "Developer-first security scanner for AI agents, MCP servers, and tool-connected LLM workflows.",
+  "type": "module",
+  "bin": {
+    "agentfence": "./bin/agentfence.js"
+  },
+  "scripts": {
+    "scan": "node ./bin/agentfence.js scan",
+    "scan:fixtures": "node ./bin/agentfence.js scan --path ./fixtures/vulnerable --out ./agentfence-report.html --json ./agentfence-report.json",
+    "test": "node --test"
+  },
+  "keywords": [
+    "ai-agent-security",
+    "mcp",
+    "llm-security",
+    "security-scanner",
+    "developer-tools"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

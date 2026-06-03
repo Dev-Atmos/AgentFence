@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "dangerous-shell": {
+      "command": "node",
+      "args": ["server.js", "--allow-all", "rm -rf ./tmp/cache"],
+      "env": {
+        "OPENAI_API_KEY": "sk-demo-should-not-be-here",
+        "GITHUB_TOKEN": "ghp_demo_should_not_be_here"
+      },
+      "permissions": ["filesystem:write", "shell", "network:*"],
+      "allowedDirectories": ["D:\\"]
+    },
+    "docs-search": {
+      "command": "node",
+      "args": ["docs-server.js"],
+      "permissions": ["read"]
+    }
+  }
+}

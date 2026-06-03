@@ -1,0 +1,6 @@
+node_modules/
+dist/
+coverage/
+*.log
+agentfence-report.html
+agentfence-report.json
