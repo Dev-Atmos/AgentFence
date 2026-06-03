@@ -8,16 +8,15 @@ const CONFIG_FILE_PATTERNS = [
   "mcp.config.json",
   "claude_desktop_config.json",
   "agent.json",
-  "agents.json",
-  "agentfence.yml",
-  "agentfence.yaml"
+  "agents.json"
 ];
 
 const SCAN_DIR_NAMES = [".cursor", ".claude", ".codex", ".windsurf", ".vscode", "mcp", "agents"];
 const MAX_FILE_BYTES = 512 * 1024;
 
-export async function scanWorkspace(targetPath) {
+export async function scanWorkspace(targetPath, options = {}) {
   const startedAt = new Date().toISOString();
+  const policy = await loadPolicy(targetPath, options.policyPath);
   const files = await discoverConfigFiles(targetPath);
   const findings = [];
   const configs = [];
@@ -32,13 +31,16 @@ export async function scanWorkspace(targetPath) {
       valid: parsed.valid
     });
 
+    const fileFindings = evaluateConfig({
+      file,
+      relativeFile: path.relative(targetPath, file) || path.basename(file),
+      raw,
+      parsed,
+      policy
+    });
+
     findings.push(
-      ...evaluateConfig({
-        file,
-        relativeFile: path.relative(targetPath, file) || path.basename(file),
-        raw,
-        parsed
-      })
+      ...fileFindings.filter((finding) => !isIgnored(finding, policy))
     );
   }
 
@@ -46,15 +48,63 @@ export async function scanWorkspace(targetPath) {
 
   return {
     tool: "AgentFence",
-    version: "0.1.0",
+    version: "0.2.0",
     targetPath,
     startedAt,
     completedAt: new Date().toISOString(),
+    policy: policy.summary,
     scannedFiles: configs,
     riskScore,
     riskLevel: riskLevel(riskScore),
     findings
   };
+}
+
+async function loadPolicy(targetPath, explicitPolicyPath) {
+  const candidates = explicitPolicyPath
+    ? [explicitPolicyPath]
+    : ["agentfence.yml", "agentfence.yaml", ".agentfence.yml", ".agentfence.yaml"].map((file) =>
+        path.join(targetPath, file)
+      );
+
+  for (const candidate of candidates) {
+    try {
+      const raw = await fs.readFile(candidate, "utf8");
+      const data = parseYamlLite(raw);
+      return {
+        path: candidate,
+        data,
+        summary: {
+          file: path.relative(targetPath, candidate) || path.basename(candidate),
+          loaded: true,
+          ignoredIds: arrayValue(data.ignore).length,
+          allowedPaths: arrayValue(data.allowedPaths).length,
+          allowedSecrets: arrayValue(data.allowedSecrets).length
+        }
+      };
+    } catch (error) {
+      if (error.code !== "ENOENT") {
+        throw error;
+      }
+    }
+  }
+
+  return {
+    path: null,
+    data: {},
+    summary: {
+      file: null,
+      loaded: false,
+      ignoredIds: 0,
+      allowedPaths: 0,
+      allowedSecrets: 0
+    }
+  };
+}
+
+function isIgnored(finding, policy) {
+  const ignored = arrayValue(policy.data.ignore);
+  return ignored.includes(finding.id) || ignored.includes(`${finding.file}:${finding.title}`);
 }
 
 async function discoverConfigFiles(root) {
@@ -159,6 +209,11 @@ function parseYamlLite(raw) {
   }
 
   return result;
+}
+
+function arrayValue(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
 }
 
 function parseScalar(value) {

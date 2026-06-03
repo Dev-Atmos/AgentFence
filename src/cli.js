@@ -1,6 +1,6 @@
 import path from "node:path";
 import { scanWorkspace } from "./scanner.js";
-import { writeJsonReport, writeHtmlReport } from "./report.js";
+import { writeJsonReport, writeHtmlReport, writeSarifReport } from "./report.js";
 
 export async function runCli(argv) {
   const args = parseArgs(argv.slice(2));
@@ -15,7 +15,9 @@ export async function runCli(argv) {
   }
 
   const targetPath = path.resolve(args.path || process.cwd());
-  const result = await scanWorkspace(targetPath);
+  const result = await scanWorkspace(targetPath, {
+    policyPath: args.policy ? path.resolve(args.policy) : null
+  });
 
   printSummary(result);
 
@@ -29,7 +31,12 @@ export async function runCli(argv) {
     console.log(`HTML report written to ${args.out}`);
   }
 
-  if (args.failOn && result.riskScore >= Number(args.failOn)) {
+  if (args.sarif) {
+    await writeSarifReport(result, path.resolve(args.sarif));
+    console.log(`SARIF report written to ${args.sarif}`);
+  }
+
+  if (shouldFail(result, args.failOn)) {
     process.exitCode = 2;
   }
 }
@@ -50,6 +57,10 @@ function parseArgs(rawArgs) {
       parsed.json = args[++index];
     } else if (arg === "--out" || arg === "-o") {
       parsed.out = args[++index];
+    } else if (arg === "--sarif") {
+      parsed.sarif = args[++index];
+    } else if (arg === "--policy") {
+      parsed.policy = args[++index];
     } else if (arg === "--fail-on") {
       parsed.failOn = args[++index];
     } else {
@@ -70,9 +81,30 @@ Options:
   -p, --path <dir>       Workspace to scan. Defaults to current directory.
       --json <file>      Write machine-readable JSON report.
   -o, --out <file>       Write local HTML report.
-      --fail-on <score>  Exit with code 2 when risk score is at or above score.
+      --sarif <file>     Write SARIF report for code scanning.
+      --policy <file>    Use an AgentFence policy file.
+      --fail-on <gate>   Exit with code 2 on score or severity: low, medium, high, critical.
   -h, --help             Show help.
 `);
+}
+
+function shouldFail(result, failOn) {
+  if (!failOn) {
+    return false;
+  }
+
+  if (/^\d+$/.test(String(failOn))) {
+    return result.riskScore >= Number(failOn);
+  }
+
+  const severityRank = { low: 1, medium: 2, high: 3, critical: 4 };
+  const threshold = severityRank[String(failOn).toLowerCase()];
+
+  if (!threshold) {
+    throw new Error(`Invalid --fail-on value "${failOn}"`);
+  }
+
+  return result.findings.some((finding) => severityRank[finding.severity] >= threshold);
 }
 
 function printSummary(result) {

@@ -1,0 +1,14 @@
+# AgentFence policy example.
+#
+# Use this file to document intentional exceptions. Keep exceptions narrow and
+# reviewed. Broad allowlists reduce the scanner's value.
+
+ignore:
+  # - ".mcp.json:Broad agent permission scope"
+
+allowedPaths:
+  - "./fixtures"
+
+allowedSecrets:
+  # Example: allow non-secret configuration keys that include token-like names.
+  # - "publicTokenName"

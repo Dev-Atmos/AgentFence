@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "allowed-demo": {
+      "command": "node",
+      "args": ["server.js"],
+      "env": {
+        "OPENAI_API_KEY": "loaded-from-secure-test-fixture"
+      },
+      "allowedDirectories": ["D:\\"]
+    }
+  }
+}

@@ -8,6 +8,68 @@ export async function writeHtmlReport(result, file) {
   await fs.writeFile(file, renderHtml(result), "utf8");
 }
 
+export async function writeSarifReport(result, file) {
+  await fs.writeFile(file, `${JSON.stringify(renderSarif(result), null, 2)}\n`, "utf8");
+}
+
+function renderSarif(result) {
+  const rules = new Map();
+
+  for (const finding of result.findings) {
+    rules.set(finding.title, {
+      id: finding.title,
+      name: finding.title,
+      shortDescription: { text: finding.title },
+      fullDescription: { text: finding.recommendation },
+      defaultConfiguration: {
+        level: sarifLevel(finding.severity)
+      }
+    });
+  }
+
+  return {
+    version: "2.1.0",
+    $schema: "https://json.schemastore.org/sarif-2.1.0.json",
+    runs: [
+      {
+        tool: {
+          driver: {
+            name: "AgentFence",
+            informationUri: "https://github.com/Dev-Atmos/AgentFence",
+            rules: [...rules.values()]
+          }
+        },
+        results: result.findings.map((finding) => ({
+          ruleId: finding.title,
+          level: sarifLevel(finding.severity),
+          message: {
+            text: `${finding.detail} Recommendation: ${finding.recommendation}`
+          },
+          locations: [
+            {
+              physicalLocation: {
+                artifactLocation: {
+                  uri: finding.file.replaceAll("\\", "/")
+                }
+              }
+            }
+          ],
+          properties: {
+            agentfenceId: finding.id,
+            severity: finding.severity
+          }
+        }))
+      }
+    ]
+  };
+}
+
+function sarifLevel(severity) {
+  if (severity === "critical" || severity === "high") return "error";
+  if (severity === "medium") return "warning";
+  return "note";
+}
+
 function renderHtml(result) {
   const findingRows = result.findings
     .map(
@@ -24,6 +86,10 @@ function renderHtml(result) {
   const scannedFiles = result.scannedFiles
     .map((file) => `<li>${escapeHtml(file.relativeFile)} <span>${escapeHtml(file.parser)}</span></li>`)
     .join("");
+
+  const policyText = result.policy.loaded
+    ? `Policy loaded from ${result.policy.file}. ${result.policy.ignoredIds} ignored IDs, ${result.policy.allowedPaths} allowed paths.`
+    : "No policy file loaded.";
 
   return `<!doctype html>
 <html lang="en">
@@ -68,6 +134,10 @@ function renderHtml(result) {
       <div class="card"><span>Scanned files</span><strong>${result.scannedFiles.length}</strong></div>
       <div class="card"><span>Completed</span><strong>${new Date(result.completedAt).toLocaleTimeString()}</strong></div>
     </div>
+    <section>
+      <h2>Policy</h2>
+      <p>${escapeHtml(policyText)}</p>
+    </section>
     <section>
       <h2>Findings</h2>
       <table>

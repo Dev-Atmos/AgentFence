@@ -24,3 +24,11 @@ test("safe fixture reports no findings", async () => {
   assert.equal(result.riskScore, 0);
   assert.equal(result.findings.length, 0);
 });
+
+test("policy allows documented paths and secret-like keys", async () => {
+  const result = await scanWorkspace(path.join(root, "fixtures", "policy"));
+
+  assert.equal(result.policy.loaded, true);
+  assert.equal(result.riskScore, 0);
+  assert.equal(result.findings.length, 0);
+});

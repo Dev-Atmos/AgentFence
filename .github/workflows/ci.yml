@@ -19,9 +19,7 @@ jobs:
           node-version: 20
 
       - name: Test
-        working-directory: agentfence
         run: npm test
 
       - name: Scan vulnerable fixture
-        working-directory: agentfence
-        run: node ./bin/agentfence.js scan --path ./fixtures/vulnerable --json ./agentfence-report.json --out ./agentfence-report.html
+        run: node ./bin/agentfence.js scan --path ./fixtures/vulnerable --json ./agentfence-report.json --out ./agentfence-report.html --sarif ./agentfence-report.sarif

@@ -30,7 +30,7 @@ const BROAD_ACCESS_PATTERNS = [
   /d:\\\\/i
 ];
 
-export function evaluateConfig({ relativeFile, raw, parsed }) {
+export function evaluateConfig({ relativeFile, raw, parsed, policy = { data: {} } }) {
   const findings = [];
 
   if (!parsed.valid) {
@@ -46,7 +46,7 @@ export function evaluateConfig({ relativeFile, raw, parsed }) {
     const value = String(item.value ?? "");
     const combined = `${key}=${value}`;
 
-    if (SECRET_PATTERNS.some((pattern) => pattern.test(combined))) {
+    if (SECRET_PATTERNS.some((pattern) => pattern.test(combined)) && !isAllowedSecret(key, policy)) {
       findings.push(
         finding(
           "high",
@@ -68,7 +68,11 @@ export function evaluateConfig({ relativeFile, raw, parsed }) {
       );
     }
 
-    if (/filesystem|file|path|root|directory|cwd|allowed/i.test(key) && BROAD_ACCESS_PATTERNS.some((pattern) => pattern.test(value))) {
+    if (
+      /filesystem|file|path|root|directory|cwd|allowed/i.test(key) &&
+      BROAD_ACCESS_PATTERNS.some((pattern) => pattern.test(value)) &&
+      !isAllowedPath(value, policy)
+    ) {
       findings.push(
         finding(
           "high",
@@ -93,6 +97,21 @@ export function evaluateConfig({ relativeFile, raw, parsed }) {
 
   findings.push(...scanRawLines(relativeFile, rawLines));
   return dedupeFindings(findings);
+}
+
+function isAllowedPath(value, policy) {
+  const allowedPaths = arrayValue(policy.data.allowedPaths);
+  return allowedPaths.some((allowedPath) => String(value).startsWith(String(allowedPath)));
+}
+
+function isAllowedSecret(key, policy) {
+  const allowedSecrets = arrayValue(policy.data.allowedSecrets);
+  return allowedSecrets.some((allowedSecret) => key.toLowerCase().includes(String(allowedSecret).toLowerCase()));
+}
+
+function arrayValue(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
 }
 
 function scanRawLines(relativeFile, lines) {

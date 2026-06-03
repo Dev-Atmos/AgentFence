@@ -4,3 +4,4 @@ coverage/
 *.log
 agentfence-report.html
 agentfence-report.json
+agentfence-report.sarif

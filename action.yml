@@ -1,0 +1,38 @@
+name: AgentFence
+description: Scan AI agent and MCP configs for risky permissions, secrets, and unsafe tool access.
+branding:
+  icon: shield
+  color: green
+inputs:
+  path:
+    description: Workspace path to scan.
+    required: false
+    default: .
+  fail-on:
+    description: Fail threshold. Use a score or severity: low, medium, high, critical.
+    required: false
+    default: high
+  sarif:
+    description: SARIF output path.
+    required: false
+    default: agentfence-report.sarif
+  json:
+    description: JSON output path.
+    required: false
+    default: agentfence-report.json
+runs:
+  using: composite
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Run AgentFence
+      shell: bash
+      run: |
+        node "$GITHUB_ACTION_PATH/bin/agentfence.js" scan \
+          --path "${{ inputs.path }}" \
+          --json "${{ inputs.json }}" \
+          --sarif "${{ inputs.sarif }}" \
+          --fail-on "${{ inputs.fail-on }}"

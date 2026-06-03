@@ -19,16 +19,16 @@ AgentFence starts with a simple local scan:
 
 ## Quick Start
 
-From this directory:
+Run locally from a cloned repo:
 
 ```powershell
 node ./bin/agentfence.js scan --path ./fixtures/vulnerable --out ./agentfence-report.html --json ./agentfence-report.json
 ```
 
-With the Codex bundled Node runtime in this workspace:
+After npm publishing, the target command will be:
 
-```powershell
-& "C:\Users\dipak\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe" .\bin\agentfence.js scan --path .\fixtures\vulnerable --out .\agentfence-report.html --json .\agentfence-report.json
+```bash
+npx agentfence scan --path .
 ```
 
 ## CLI
@@ -40,9 +40,52 @@ Options:
   -p, --path <dir>       Workspace to scan. Defaults to current directory.
       --json <file>      Write machine-readable JSON report.
   -o, --out <file>       Write local HTML report.
-      --fail-on <score>  Exit with code 2 when risk score is at or above score.
+      --sarif <file>     Write SARIF report for code scanning.
+      --policy <file>    Use an AgentFence policy file.
+      --fail-on <gate>   Exit with code 2 on score or severity: low, medium, high, critical.
   -h, --help             Show help.
 ```
+
+## GitHub Action
+
+```yaml
+name: AgentFence
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  agentfence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: Dev-Atmos/AgentFence@main
+        with:
+          path: .
+          fail-on: high
+          sarif: agentfence-report.sarif
+          json: agentfence-report.json
+```
+
+## Policy File
+
+Create `agentfence.yml` in the repository root to document narrow exceptions.
+
+```yaml
+ignore:
+  - ".mcp.json:Broad agent permission scope"
+
+allowedPaths:
+  - "./docs"
+
+allowedSecrets:
+  - "publicTokenName"
+```
+
+Prefer fixing broad permissions over ignoring findings. Policy files should be reviewed like code.
 
 ## Current Rules
 
@@ -66,11 +109,13 @@ Options:
 
 - GitHub Action.
 - Policy file: `agentfence.yml`.
-- Approved tool registry.
 - CI fail thresholds.
+- SARIF output.
+- Ignore/allow policy support.
 
 ### v0.3
 
+- Approved tool registry.
 - VS Code/Cursor extension.
 - Team dashboard.
 - Trend tracking.

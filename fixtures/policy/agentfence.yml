@@ -1,0 +1,5 @@
+allowedPaths:
+  - "D:\\"
+
+allowedSecrets:
+  - "OPENAI_API_KEY"

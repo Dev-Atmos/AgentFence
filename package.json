@@ -1,6 +1,6 @@
 {
   "name": "agentfence",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Developer-first security scanner for AI agents, MCP servers, and tool-connected LLM workflows.",
   "type": "module",
   "bin": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "scan": "node ./bin/agentfence.js scan",
-    "scan:fixtures": "node ./bin/agentfence.js scan --path ./fixtures/vulnerable --out ./agentfence-report.html --json ./agentfence-report.json",
+    "scan:fixtures": "node ./bin/agentfence.js scan --path ./fixtures/vulnerable --out ./agentfence-report.html --json ./agentfence-report.json --sarif ./agentfence-report.sarif",
     "test": "node --test"
   },
   "keywords": [
