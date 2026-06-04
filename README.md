@@ -4,6 +4,9 @@ Developer-first security scanner for AI agents, MCP servers, and tool-connected 
 
 AgentFence helps teams find risky agent permissions before AI tools touch real files, shell commands, APIs, secrets, databases, or cloud resources.
 
+[![CI](https://github.com/Dev-Atmos/AgentFence/actions/workflows/ci.yml/badge.svg)](https://github.com/Dev-Atmos/AgentFence/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 ## Why
 
 AI coding agents and MCP servers move quickly from experiments to real workflows. They often gain access to local files, shell commands, environment variables, network calls, and internal APIs before anyone reviews the blast radius.
@@ -19,16 +22,16 @@ AgentFence starts with a simple local scan:
 
 ## Quick Start
 
+After npm publishing:
+
+```bash
+npx agentfence scan --path .
+```
+
 Run locally from a cloned repo:
 
 ```powershell
 node ./bin/agentfence.js scan --path ./fixtures/vulnerable --out ./agentfence-report.html --json ./agentfence-report.json
-```
-
-After npm publishing, the target command will be:
-
-```bash
-npx agentfence scan --path .
 ```
 
 ## CLI
@@ -68,6 +71,39 @@ jobs:
           fail-on: high
           sarif: agentfence-report.sarif
           json: agentfence-report.json
+```
+
+## GitHub Code Scanning
+
+Upload SARIF to GitHub's Security tab:
+
+```yaml
+name: AgentFence Code Scanning
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: Dev-Atmos/AgentFence@main
+        with:
+          path: .
+          fail-on: critical
+          sarif: agentfence-report.sarif
+
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: agentfence-report.sarif
 ```
 
 ## Policy File

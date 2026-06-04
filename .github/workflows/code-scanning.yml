@@ -1,0 +1,31 @@
+name: AgentFence Code Scanning
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run AgentFence
+        uses: Dev-Atmos/AgentFence@main
+        with:
+          path: .
+          fail-on: critical
+          sarif: agentfence-report.sarif
+          json: agentfence-report.json
+
+      - name: Upload SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: agentfence-report.sarif

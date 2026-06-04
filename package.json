@@ -3,13 +3,22 @@
   "version": "0.2.0",
   "description": "Developer-first security scanner for AI agents, MCP servers, and tool-connected LLM workflows.",
   "type": "module",
+  "author": "Dev Atmos",
   "bin": {
     "agentfence": "./bin/agentfence.js"
   },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE",
+    "agentfence.yml"
+  ],
   "scripts": {
     "scan": "node ./bin/agentfence.js scan",
     "scan:fixtures": "node ./bin/agentfence.js scan --path ./fixtures/vulnerable --out ./agentfence-report.html --json ./agentfence-report.json --sarif ./agentfence-report.sarif",
-    "test": "node --test"
+    "prepack": "node --test test/scanner.test.js",
+    "test": "node --test test/scanner.test.js"
   },
   "keywords": [
     "ai-agent-security",
@@ -18,8 +27,18 @@
     "security-scanner",
     "developer-tools"
   ],
-  "author": "",
   "license": "MIT",
+  "homepage": "https://dev-atmos.github.io/AgentFence/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dev-Atmos/AgentFence.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dev-Atmos/AgentFence/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18"
   }
