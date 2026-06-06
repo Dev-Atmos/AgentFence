@@ -30,6 +30,49 @@ If that project name is unavailable, use:
 https://agentfence-devatmos.pages.dev
 ```
 
+## Cloudflare Workers Subdomain
+
+If Cloudflare gives a URL like:
+
+```text
+https://agentfence.dpsmysticsaga.workers.dev
+```
+
+then the project was deployed as a Worker, or Cloudflare is showing the Workers route. In that URL:
+
+- `agentfence` is the Worker name.
+- `dpsmysticsaga` is the Cloudflare account `workers.dev` subdomain.
+
+Preferred account subdomain:
+
+```text
+devatmos
+```
+
+Fallback if unavailable:
+
+```text
+dev-atmos
+```
+
+Expected Worker URL after changing the account subdomain:
+
+```text
+https://agentfence.devatmos.workers.dev
+```
+
+or:
+
+```text
+https://agentfence.dev-atmos.workers.dev
+```
+
+This is separate from Pages. A proper Pages deployment should use:
+
+```text
+https://agentfence.pages.dev
+```
+
 ## Deployment Options
 
 ### Option 1: Connect GitHub Repository
