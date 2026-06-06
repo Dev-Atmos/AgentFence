@@ -5,3 +5,4 @@ coverage/
 agentfence-report.html
 agentfence-report.json
 agentfence-report.sarif
+.tools/
