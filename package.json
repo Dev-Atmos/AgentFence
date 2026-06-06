@@ -5,7 +5,7 @@
   "type": "module",
   "author": "Dev Atmos",
   "bin": {
-    "agentfence": "./bin/agentfence.js"
+    "agentfence": "bin/agentfence.js"
   },
   "files": [
     "bin",
