@@ -5,3 +5,10 @@ coverage/
 agentfence-report.html
 agentfence-report.json
 agentfence-report.sarif
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
