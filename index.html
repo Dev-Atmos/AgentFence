@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AgentFence - AI Agent Security Scanner</title>
+    <meta
+      name="description"
+      content="AgentFence scans AI agent and MCP configs for risky permissions, secrets, destructive commands, and unsafe tool access."
+    />
+    <link rel="canonical" href="https://agentfence.pages.dev/docs/" />
+    <link rel="stylesheet" href="./docs/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav>
+        <a class="brand" href="#top">AgentFence</a>
+        <div>
+          <a href="https://github.com/Dev-Atmos/AgentFence">GitHub</a>
+          <a href="#usage">Usage</a>
+          <a href="#ci">CI</a>
+        </div>
+      </nav>
+      <section id="top" class="hero-grid">
+        <div>
+          <p class="eyebrow">AI agent security scanner</p>
+          <h1>Scan risky MCP and AI-agent permissions before they touch production.</h1>
+          <p class="lead">
+            AgentFence finds broad filesystem access, secret exposure, destructive commands,
+            unsafe runtime settings, and policy gaps in tool-connected LLM workflows.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/Dev-Atmos/AgentFence">View on GitHub</a>
+            <a class="button secondary" href="#usage">Run locally</a>
+          </div>
+        </div>
+        <pre class="terminal"><code>$ npx agentfence scan --path .
+AgentFence scan complete
+Risk score: 100/100 (critical)
+Findings: 2 critical, 3 high, 6 medium</code></pre>
+      </section>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="section-head">
+          <p class="eyebrow">Why it matters</p>
+          <h2>AI agents are gaining shell, file, API, and secret access faster than review processes can keep up.</h2>
+        </div>
+        <div class="grid">
+          <article>
+            <h3>Find risky access</h3>
+            <p>Detect broad paths, admin-like scopes, wildcard network permissions, and shell-enabled workflows.</p>
+          </article>
+          <article>
+            <h3>Catch sharp edges</h3>
+            <p>Flag destructive command patterns, secret-looking config keys, and unsafe runtime settings.</p>
+          </article>
+          <article>
+            <h3>Ship with CI</h3>
+            <p>Generate JSON, HTML, and SARIF reports, then fail builds by score or severity.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="band" id="usage">
+        <div class="section-head">
+          <p class="eyebrow">Usage</p>
+          <h2>Start with a local scan.</h2>
+        </div>
+        <pre><code>npx agentfence scan --path . \
+  --json agentfence-report.json \
+  --sarif agentfence-report.sarif \
+  --fail-on high</code></pre>
+      </section>
+
+      <section class="section" id="ci">
+        <div class="section-head">
+          <p class="eyebrow">GitHub Action</p>
+          <h2>Add AgentFence to pull requests.</h2>
+        </div>
+        <pre><code>- uses: Dev-Atmos/AgentFence@main
+  with:
+    path: .
+    fail-on: high
+    sarif: agentfence-report.sarif</code></pre>
+      </section>
+    </main>
+  </body>
+</html>

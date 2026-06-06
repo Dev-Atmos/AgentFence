@@ -18,6 +18,9 @@ Reason:
 - Build output directory: `docs`
 - Framework preset: none / static HTML
 
+If Cloudflare is currently using the repository root as the output directory,
+the root `index.html` fallback will still serve the landing page correctly.
+
 Expected URL:
 
 ```text
