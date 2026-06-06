@@ -2,6 +2,8 @@
 
 ## v0.2.0 Checklist
 
+Status: published to npm as `agentfence@0.2.0`.
+
 1. Run tests.
 
 ```bash
@@ -31,6 +33,13 @@ git push origin v0.2.0
 
 ```bash
 npm publish
+```
+
+Published:
+
+```bash
+npm view agentfence version
+# 0.2.0
 ```
 
 6. Create GitHub release using the notes below.
