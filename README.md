@@ -125,6 +125,14 @@ allowedSecrets:
 
 Prefer fixing broad permissions over ignoring findings. Policy files should be reviewed like code.
 
+## Project Links
+
+- Site: https://agentfence.pages.dev
+- npm: https://www.npmjs.com/package/agentfence
+- Release notes: [RELEASE_NOTES_v0.2.0.md](RELEASE_NOTES_v0.2.0.md)
+- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Security policy: [SECURITY.md](SECURITY.md)
+
 ## Current Rules
 
 - Potential secret or credential exposure.
