@@ -7,6 +7,8 @@ AgentFence helps teams find risky agent permissions before AI tools touch real f
 [![CI](https://github.com/Dev-Atmos/AgentFence/actions/workflows/ci.yml/badge.svg)](https://github.com/Dev-Atmos/AgentFence/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+Docs site target: `https://agentfence.pages.dev`
+
 ## Why
 
 AI coding agents and MCP servers move quickly from experiments to real workflows. They often gain access to local files, shell commands, environment variables, network calls, and internal APIs before anyone reviews the blast radius.

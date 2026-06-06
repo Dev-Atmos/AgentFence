@@ -35,6 +35,13 @@ npm publish
 
 6. Create GitHub release using the notes below.
 
+7. Deploy docs through Cloudflare Pages.
+
+Use:
+
+- Build command: empty
+- Build output directory: `docs`
+
 ## v0.2.0 Notes
 
 AgentFence v0.2.0 prepares the scanner for real CI usage:
