@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Agent Security Scanner - AgentFence</title>
+    <meta
+      name="description"
+      content="AgentFence is a CLI and GitHub Action for scanning AI-agent and MCP configs for risky file, shell, secret, and permission access."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav>
+        <a class="brand" href="/">AgentFence</a>
+        <div>
+          <a href="https://github.com/Dev-Atmos/AgentFence">GitHub</a>
+          <a href="https://www.npmjs.com/package/agentfence">npm</a>
+        </div>
+      </nav>
+      <section class="hero-grid">
+        <div>
+          <p class="eyebrow">AI agent security</p>
+          <h1>Scan AI-agent configs before permissions become incidents.</h1>
+          <p class="lead">
+            AgentFence helps developers catch risky agent access patterns early:
+            broad filesystem permissions, destructive commands, secret-looking keys,
+            unsafe runtime settings, and broad tool scopes.
+          </p>
+        </div>
+        <pre class="terminal"><code>npx agentfence scan --path .
+AgentFence scan complete
+Risk score: 100/100 (critical)</code></pre>
+      </section>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="section-head">
+          <p class="eyebrow">Use cases</p>
+          <h2>Where AgentFence fits.</h2>
+        </div>
+        <div class="grid">
+          <article>
+            <h3>Local review</h3>
+            <p>Run a scan before enabling new MCP servers or AI-agent tools in a project.</p>
+          </article>
+          <article>
+            <h3>Pull requests</h3>
+            <p>Fail CI when config changes introduce high or critical agent permissions.</p>
+          </article>
+          <article>
+            <h3>Agency reports</h3>
+            <p>Create lightweight risk reports for teams adopting AI coding workflows across multiple client repos.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

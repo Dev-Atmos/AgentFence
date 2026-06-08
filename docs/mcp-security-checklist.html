@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MCP Security Checklist for Developers - AgentFence</title>
+    <meta
+      name="description"
+      content="A practical MCP security checklist for developers using AI agents, coding assistants, and tool-connected LLM workflows."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav>
+        <a class="brand" href="/">AgentFence</a>
+        <div>
+          <a href="https://github.com/Dev-Atmos/AgentFence">GitHub</a>
+          <a href="https://www.npmjs.com/package/agentfence">npm</a>
+        </div>
+      </nav>
+      <section class="hero-grid">
+        <div>
+          <p class="eyebrow">MCP security checklist</p>
+          <h1>Review MCP permissions before agents touch real systems.</h1>
+          <p class="lead">
+            MCP servers can give agents access to files, shell commands, APIs, databases,
+            and internal tools. This checklist keeps the first review simple.
+          </p>
+        </div>
+        <pre class="terminal"><code>npx agentfence scan --path . \
+  --sarif agentfence-report.sarif \
+  --fail-on high</code></pre>
+      </section>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="section-head">
+          <p class="eyebrow">Checklist</p>
+          <h2>Minimum review before using MCP in a project.</h2>
+        </div>
+        <div class="grid">
+          <article>
+            <h3>Scope filesystem access</h3>
+            <p>Do not grant home, drive, root, system, or broad workspace access unless the workflow truly needs it.</p>
+          </article>
+          <article>
+            <h3>Keep secrets out of configs</h3>
+            <p>Move API keys, tokens, and passwords into a secret manager or environment controlled outside agent-readable files.</p>
+          </article>
+          <article>
+            <h3>Block destructive commands</h3>
+            <p>Require human approval before tools can delete files, drop databases, destroy infra, or modify production systems.</p>
+          </article>
+          <article>
+            <h3>Use least privilege</h3>
+            <p>Replace wildcard, admin, all, shell, network, and write scopes with the smallest useful permission set.</p>
+          </article>
+          <article>
+            <h3>Treat external text as hostile</h3>
+            <p>Tool descriptions, retrieved documents, web pages, and issue text can contain prompt-injection instructions.</p>
+          </article>
+          <article>
+            <h3>Run scans in CI</h3>
+            <p>Add a CI check so risky agent permission changes are reviewed before merging.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
