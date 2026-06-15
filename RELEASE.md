@@ -4,6 +4,32 @@
 
 Status: published to npm as `agentfence@0.2.0`.
 
+## v0.3.0 Checklist
+
+1. Run tests.
+
+```bash
+npm test
+```
+
+2. Run init smoke test.
+
+```bash
+npx agentfence init
+```
+
+3. Confirm package contents.
+
+```bash
+npm pack --dry-run
+```
+
+4. Publish.
+
+```bash
+npm publish
+```
+
 1. Run tests.
 
 ```bash

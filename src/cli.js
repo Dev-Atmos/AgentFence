@@ -1,12 +1,25 @@
 import path from "node:path";
 import { scanWorkspace } from "./scanner.js";
 import { writeJsonReport, writeHtmlReport, writeSarifReport } from "./report.js";
+import { initPolicy } from "./policy.js";
 
 export async function runCli(argv) {
   const args = parseArgs(argv.slice(2));
 
   if (args.help || !args.command) {
     printHelp();
+    return;
+  }
+
+  if (args.command === "init") {
+    const targetPath = path.resolve(args.path || process.cwd());
+    const result = await initPolicy(targetPath, { force: args.force });
+
+    if (result.created) {
+      console.log(`Created ${path.relative(process.cwd(), result.path) || result.path}`);
+    } else {
+      console.log(`Skipped ${path.relative(process.cwd(), result.path) || result.path}: already exists. Use --force to overwrite.`);
+    }
     return;
   }
 
@@ -44,6 +57,12 @@ export async function runCli(argv) {
 function parseArgs(rawArgs) {
   const parsed = {};
   const args = [...rawArgs];
+
+  if (args[0] === "--help" || args[0] === "-h") {
+    parsed.help = true;
+    return parsed;
+  }
+
   parsed.command = args.shift();
 
   for (let index = 0; index < args.length; index += 1) {
@@ -63,6 +82,8 @@ function parseArgs(rawArgs) {
       parsed.policy = args[++index];
     } else if (arg === "--fail-on") {
       parsed.failOn = args[++index];
+    } else if (arg === "--force" || arg === "-f") {
+      parsed.force = true;
     } else {
       throw new Error(`Unknown option "${arg}"`);
     }
@@ -76,6 +97,7 @@ function printHelp() {
 
 Usage:
   agentfence scan [options]
+  agentfence init [options]
 
 Options:
   -p, --path <dir>       Workspace to scan. Defaults to current directory.
@@ -84,6 +106,7 @@ Options:
       --sarif <file>     Write SARIF report for code scanning.
       --policy <file>    Use an AgentFence policy file.
       --fail-on <gate>   Exit with code 2 on score or severity: low, medium, high, critical.
+  -f, --force            Overwrite existing policy file when using init.
   -h, --help             Show help.
 `);
 }

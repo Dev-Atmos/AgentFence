@@ -44,6 +44,9 @@ Convert active usage into paid workflow value.
 
 Deliverables:
 
+- `agentfence init`.
+- Markdown report output.
+- Real MCP client examples.
 - GitHub Action policy gate.
 - `agentfence.yml` policy file.
 - Approved tool registry.

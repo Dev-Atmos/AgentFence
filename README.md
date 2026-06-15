@@ -24,9 +24,8 @@ AgentFence starts with a simple local scan:
 
 ## Quick Start
 
-After npm publishing:
-
 ```bash
+npx agentfence init
 npx agentfence scan --path .
 ```
 
@@ -40,6 +39,7 @@ node ./bin/agentfence.js scan --path ./fixtures/vulnerable --out ./agentfence-re
 
 ```text
 agentfence scan [options]
+agentfence init [options]
 
 Options:
   -p, --path <dir>       Workspace to scan. Defaults to current directory.
@@ -48,6 +48,7 @@ Options:
       --sarif <file>     Write SARIF report for code scanning.
       --policy <file>    Use an AgentFence policy file.
       --fail-on <gate>   Exit with code 2 on score or severity: low, medium, high, critical.
+  -f, --force            Overwrite existing policy file when using init.
   -h, --help             Show help.
 ```
 
@@ -112,6 +113,12 @@ jobs:
 
 Create `agentfence.yml` in the repository root to document narrow exceptions.
 
+Generate a starter file:
+
+```bash
+npx agentfence init
+```
+
 ```yaml
 ignore:
   - ".mcp.json:Broad agent permission scope"
@@ -160,6 +167,13 @@ Prefer fixing broad permissions over ignoring findings. Policy files should be r
 - Ignore/allow policy support.
 
 ### v0.3
+
+- Policy init command.
+- Markdown report output.
+- Real MCP client examples.
+- README screenshots.
+
+### Later
 
 - Approved tool registry.
 - VS Code/Cursor extension.
