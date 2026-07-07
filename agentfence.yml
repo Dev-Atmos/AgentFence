@@ -5,6 +5,16 @@
 
 ignore:
   # - ".mcp.json:Broad agent permission scope"
+  # Intentional test fixtures used to verify scanner behavior.
+  - "high-potential-secret-or-credential-exposure-fixtures-policy-mcp-json-key-or-value-looks-credent"
+  - "critical-destructive-command-reachable-by-agent-fixtures-vulnerable-cursor-mcp-json-command-like"
+  - "high-broad-filesystem-access-fixtures-vulnerable-cursor-mcp-json-path-like-field-appears-overly-"
+  - "medium-broad-agent-permission-scope-fixtures-vulnerable-cursor-mcp-json-permission-like-field-sh"
+  - "medium-prompt-injection-related-text-found-fixtures-vulnerable-cursor-mcp-json-line-10-contains-"
+  - "critical-destructive-command-reachable-by-agent-fixtures-vulnerable-mcp-json-command-like-field-"
+  - "high-potential-secret-or-credential-exposure-fixtures-vulnerable-mcp-json-key-or-value-looks-cre"
+  - "medium-broad-agent-permission-scope-fixtures-vulnerable-mcp-json-permission-like-field-should-be"
+  - "medium-unsafe-runtime-or-network-setting-fixtures-vulnerable-mcp-json-line-5-contains-an-unsafe-"
 
 allowedPaths:
   - "./fixtures"

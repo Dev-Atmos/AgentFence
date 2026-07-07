@@ -20,6 +20,10 @@ inputs:
     description: JSON output path.
     required: false
     default: agentfence-report.json
+  policy:
+    description: AgentFence policy file path.
+    required: false
+    default: agentfence.yml
 runs:
   using: composite
   steps:
@@ -33,6 +37,7 @@ runs:
       run: |
         node "$GITHUB_ACTION_PATH/bin/agentfence.js" scan \
           --path "${{ inputs.path }}" \
+          --policy "${{ inputs.policy }}" \
           --json "${{ inputs.json }}" \
           --sarif "${{ inputs.sarif }}" \
           --fail-on "${{ inputs.fail-on }}"
