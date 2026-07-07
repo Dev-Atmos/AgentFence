@@ -9,7 +9,7 @@ inputs:
     required: false
     default: .
   fail-on:
-    description: Fail threshold. Use a score or severity: low, medium, high, critical.
+    description: "Fail threshold. Use a score or severity: low, medium, high, critical."
     required: false
     default: high
   sarif:
